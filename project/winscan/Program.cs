@@ -5,6 +5,8 @@ using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net.NetworkInformation;
+
 
 namespace NetScan
 {
@@ -14,15 +16,42 @@ namespace NetScan
         private static CancellationTokenSource cts = new CancellationTokenSource();
         static void Main(string[] args)
         {
+            Ping sender = new Ping();
+            Stopwatch s = new Stopwatch();
+            string ipBase = " ";
+            if (args.Length == 0)
+            {
+                ipBase = "192.168.1.";
+            }
+
+            s.Start();
+
             Console.CancelKeyPress += Console_CancelKeyPress;
 
             Console.WriteLine("netscanner tool");
             Console.WriteLine(string.Format("version {0}", Assembly.GetExecutingAssembly().GetName().Version));
             Console.WriteLine(string.Format("more from https://github.com/qitas"));
+
             var onlyPIParams = new string[] { "-o", "/o", "-onlypi", "/onlypi" };
             var helpParams = new string[] { "-h", "/h", "-help", "/help" };
             for (var i = 0; i < args.Count(); i++)
             {
+                try
+                {
+                    PingReply reply = sender.Send(ipBase + i.ToString(), 5);
+                    if (reply.Status == IPStatus.Success)
+                    {
+                        Console.WriteLine("Address: {0}", reply.Address);
+                        Console.WriteLine("Hostname: {0}", Dns.GetHostEntry(reply.Address).HostName);
+                        Console.WriteLine();
+                    }
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Couldn't resolve host.");
+                    Console.WriteLine();
+                }
+
                 if (helpParams.Contains(args[i].ToLowerInvariant()))
                 {
                     Console.WriteLine(string.Format("Usage : {0} [IP] [-a|-all] [-h|-help]", System.AppDomain.CurrentDomain.FriendlyName));
