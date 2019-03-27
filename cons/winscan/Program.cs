@@ -51,7 +51,7 @@ namespace NetScan
                     Console.WriteLine("Couldn't resolve host.");
                     Console.WriteLine();
                 }
-
+                /*
                 if (helpParams.Contains(args[i].ToLowerInvariant()))
                 {
                     Console.WriteLine(string.Format("Usage : {0} [IP] [-a|-all] [-h|-help]", System.AppDomain.CurrentDomain.FriendlyName));
@@ -72,12 +72,14 @@ namespace NetScan
                         IPAddressHelper.ScanMac(ScanOutput, cts.Token, paramIP);
                     }
                 }
+                */
             }
             IPAddressHelper.ScanMac(ScanOutput, cts.Token);
 #if DEBUG
             Console.ReadKey(false);
 #endif
         }
+
         static void ScanOutput(IPAddress ip, string mac)
         {
             //All Raspberry PI MAC address start with the same prefix
@@ -85,6 +87,7 @@ namespace NetScan
             if ((onlyPI && spotted) || !onlyPI)
                 Console.WriteLine(string.Format("IP={0} MAC={1}{2}", ip, mac, spotted ? " <- spotted !!!" : ""));
         }
+
         static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
             cts.Cancel();
