@@ -9,6 +9,7 @@ windows网络端口发现工具
 ## [组成](qitas/)
 
 * [窗口项目](form/)
+* [WFC项目](window/)
 
 ### [其他window工具](https://github.com/Qitas/software)
 
